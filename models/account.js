@@ -6,11 +6,9 @@ var AccountSchema = new mongoose.Schema({
 	color: String,
 	imageEncoded: String,
 	lastUpdate: String,
-	user: {
-		id: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'User'
-		}
+	user_id: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User'
 	}
 });
 
