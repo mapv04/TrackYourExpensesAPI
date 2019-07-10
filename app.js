@@ -41,16 +41,24 @@ app.get('/', function(req, res) {
 
 //Sign Up
 app.post('/addNewUser', function(req, res) {
-	console.log();
-	User.register(new User({ username: req.body.username }), req.body.password, function(err, user) {
-		if (err) {
-			console.log(err);
-		} else {
-			passport.authenticate('local')(req, res, function() {
-				res.send('Sign Up correctly: ' + user);
-			});
+	User.register(
+		new User({
+			name: req.body.name,
+			lastname: req.body.lastname,
+			email: req.body.email,
+			username: req.body.username
+		}),
+		req.body.password,
+		function(err, user) {
+			if (err) {
+				console.log(err);
+			} else {
+				passport.authenticate('local')(req, res, function() {
+					res.send('Sign Up correctly: ' + user);
+				});
+			}
 		}
-	});
+	);
 });
 
 //Login
@@ -60,7 +68,31 @@ app.post('/login', passport.authenticate('local'), function(req, res) {
 	res.redirect('accounts/' + req.user.username);
 });
 
-app.post('/newAAccount', function(req, res) {});
+app.post('/newAAccount', authenticationMiddleware(), function(req, res) {
+	var name = req.body.name;
+	var color = req.body.color;
+	var imageEncoded = req.body.imageEncoded;
+	var lastUpdate = req.body.lastUpdate;
+	var user = {
+		id: req.user.id
+	};
+
+	var newAccount = {
+		name: name,
+		color: color,
+		imageEncoded: imageEncoded,
+		lastUpdate: lastUpdate,
+		user: user
+	};
+
+	Account.create(newAccount, function(err, newly) {
+		if (err) console.log(err);
+		else {
+			console.log(newly);
+			res.send(newly);
+		}
+	});
+});
 
 app.get('/accounts/:id', authenticationMiddleware(), function(req, res) {});
 
