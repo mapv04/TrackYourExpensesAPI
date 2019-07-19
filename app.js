@@ -5,8 +5,8 @@ var express = require('express'),
 	dotenv = require('dotenv');
 
 //import routes
-const auth = require('./auth');
-const accounts = require('./accounts');
+const auth = require('./routes/auth');
+const accounts = require('./routes/accounts');
 
 //Enviroment variables
 dotenv.config();
@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Database connection
-mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true });
+mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useCreateIndex: true });
 const port = 80;
 
 /*************************************************** */
