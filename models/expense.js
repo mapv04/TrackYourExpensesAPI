@@ -4,14 +4,14 @@ var expenseSchema = new mongoose.Schema({
 	name: String,
 	description: String,
 	date: String,
-	user_id: {
+	account_id: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User'
+		ref: 'Account'
 	},
-	expenseItemId: [
+	movs: [
 		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'ExpenseItem'
+			mov: String,
+			quantity: Number
 		}
 	]
 });

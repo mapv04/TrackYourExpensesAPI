@@ -7,6 +7,8 @@ var express = require('express'),
 //import routes
 const auth = require('./routes/auth');
 const accounts = require('./routes/accounts');
+const incomes = require('./routes/incomes');
+const expenses = require('./routes/expenses');
 
 //Enviroment variables
 dotenv.config();
@@ -30,5 +32,7 @@ app.get('/', function(req, res) {
 
 app.use('/api/user/auth', auth);
 app.use('/api/user/accounts', accounts);
+app.use('/api/user/accounts/incomes', incomes);
+app.use('/api/user/accounts/expenses', expenses);
 
 app.listen(port, () => console.log('Service listening to port: ' + port));

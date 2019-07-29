@@ -4,14 +4,14 @@ var incomeSchema = new mongoose.Schema({
 	name: String,
 	description: String,
 	date: String,
-	user_id: {
+	account_id: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User'
+		ref: 'Account'
 	},
-	incomeItemId: [
+	movs: [
 		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'IncomeItem'
+			mov: String,
+			quantity: Number
 		}
 	]
 });

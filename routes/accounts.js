@@ -1,11 +1,12 @@
-const express = require('express');
-const router = express.Router();
-const Account = require('../models/account');
-const verifyToken = require('../verifyToken');
-const mongodb = require('mongodb');
+const express = require('express'),
+	router = express.Router(),
+	Account = require('../models/account'),
+	Income = require('../models/income'),
+	Expense = require('../models/expense'),
+	verifyToken = require('../verifyToken'),
+	mongodb = require('mongodb');
 
 router.post('/newAccount', verifyToken, function(req, res) {
-	console.log('Peticion de crear nueva cuenta');
 	var name = req.body.name;
 	var color = req.body.color;
 	var imageLocation = req.body.imageLocation;
@@ -41,20 +42,40 @@ router.get('/allAccounts', verifyToken, (req, res) => {
 	});
 });
 
-router.delete('/deleteAccount', verifyToken, (req, res) => {
-	Account.deleteOne({ _id: new mongodb.ObjectID(req.body._id), user_id: req.user._id }, function(
-		err,
-		accountDeleted
-	) {
+router.delete('/deleteAccount/:_id', verifyToken, (req, res) => {
+	const mongoAccountId = new mongodb.ObjectID(req.params._id);
+	/**
+	 * Delete the incomes from that account
+	 */
+	Income.deleteMany({ account_id: mongoAccountId }, function(err, incomesDeleted) {
 		if (err) {
 			console.log(err);
 			res.status(400).send({ message: err });
 		} else {
-			console.log(accountDeleted);
-			res.status(200).send({
-				_id: req.body._id,
-				user_id: req.user._id,
-				message: 'Account deleted'
+			/** 
+			 * Delete the expenses from that account*
+			 */
+			Expense.deleteMany({ account_id: mongoAccountId }, function(err, expensesDeleted) {
+				if (err) {
+					console.log(err);
+					res.status(400).send({ message: err });
+				} else {
+					/**
+					 * Delete the account
+					 */
+					Account.deleteOne({ _id: mongoAccountId, user_id: req.user._id }, function(err, accountDeleted) {
+						if (err) {
+							console.log(err);
+							res.status(400).send({ message: err });
+						} else {
+							res.status(200).send({
+								_id: req.params._id,
+								user_id: req.user._id,
+								message: 'Account deleted'
+							});
+						}
+					});
+				}
 			});
 		}
 	});
