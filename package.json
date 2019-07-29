@@ -2,6 +2,9 @@
 	"name": "expensesservice",
 	"version": "1.0.0",
 	"description": "Web service for TrackYourExpenses app",
+	"engines": {
+		"node": "10.8.0"
+	},
 	"main": "app.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
