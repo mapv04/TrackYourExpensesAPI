@@ -4,31 +4,76 @@ const express = require('express'),
 	Expense = require('../models/expense');
 
 router.post('/createNewExpense', verifyToken, function(req, res) {
-	var newExpense = {
-		name: req.body.name,
-		description: req.body.description,
-		date: req.body.date,
-		movs: req.body.movs,
-		account_id: req.body.accountId
-	};
-
-	Expense.create(newExpense, function(err, newly) {
+	Account.findById(req.body.accountId, function(err, account) {
 		if (err) {
 			console.log(err);
-			res.status(400).send({ message: err });
+			res.status(400).send({ message: error });
 		} else {
-			res.status(201).send(newly);
+			if (account.user_id == req.user._id) {
+				var newExpense = {
+					name: req.body.name,
+					description: req.body.description,
+					date: req.body.date,
+					total: req.body.total,
+					movs: req.body.movs,
+					account_id: req.body.accountId
+				};
+
+				Expense.create(newExpense, function(error, newly) {
+					if (error) {
+						console.log(error);
+						res.status(400).send({ message: error });
+					} else {
+						res.status(201).send(newly);
+					}
+				});
+			} else {
+				res.status(400).send({ message: 'Access denied' });
+			}
 		}
 	});
 });
 
 router.get('/allExpenses/:accountId', verifyToken, function(req, res) {
-	Expense.find({ account_id: req.params.accountId }, function(err, allExpense) {
+	Account.findById(req.params.accountId, function(err, account) {
 		if (err) {
 			console.log(err);
 			res.status(401).send({ message: err });
 		} else {
-			res.status(200).send(allExpense);
+			if (account.user_id == req.user._id) {
+				Expense.find({ account_id: req.params.accountId }, function(error, allExpense) {
+					if (error) {
+						console.log(error);
+						res.status(401).send({ message: error });
+					} else {
+						res.status(200).send(allExpense);
+					}
+				});
+			} else {
+				res.status(400).send({ message: 'Access denied' });
+			}
+		}
+	});
+});
+
+router.get('/expense/:id', verifyToken, function(req, res) {
+	Expense.findById(req.params.id, function(err, expense) {
+		if (err) {
+			console.log(err);
+			res.status(401).send({ message: err });
+		} else {
+			Account.findById(expense.account_id, function(error, account) {
+				if (error) {
+					console.log(error);
+					res.status(400).send({ message: error });
+				} else {
+					if (account.user_id == req.user._id) {
+						res.status(200).send(expense);
+					} else {
+						res.status(400).send({ message: 'Access denied' });
+					}
+				}
+			});
 		}
 	});
 });

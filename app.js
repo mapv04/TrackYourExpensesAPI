@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Database connection
-mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useCreateIndex: true });
+mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true });
 const port = 80;
 
 /*************************************************** */

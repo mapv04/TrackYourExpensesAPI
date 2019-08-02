@@ -9,6 +9,6 @@ module.exports = function(req, res, next) {
 		req.user = verified;
 		next();
 	} catch (err) {
-		res.status(400).send({ message: 'Acces denied' });
+		res.status(400).send({ message: 'Access denied' });
 	}
 };

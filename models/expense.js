@@ -4,6 +4,7 @@ var expenseSchema = new mongoose.Schema({
 	name: String,
 	description: String,
 	date: String,
+	total: Number,
 	account_id: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Account'
@@ -11,6 +12,7 @@ var expenseSchema = new mongoose.Schema({
 	movs: [
 		{
 			mov: String,
+			whereOrWho: String,
 			quantity: Number
 		}
 	]

@@ -36,7 +36,6 @@ router.get('/allAccounts', verifyToken, (req, res) => {
 			console.log(err);
 			res.status(400).send({ message: err });
 		} else {
-			console.log(allAccounts);
 			res.status(200).send(allAccounts);
 		}
 	});
