@@ -1,7 +1,8 @@
 const express = require('express'),
 	router = express.Router(),
 	verifyToken = require('../verifyToken'),
-	Expense = require('../models/expense');
+	Expense = require('../models/expense'), 
+	Account = require('../models/account');
 
 router.post('/createNewExpense', verifyToken, function(req, res) {
 	Account.findById(req.body.accountId, function(err, account) {

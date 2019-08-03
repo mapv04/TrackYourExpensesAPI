@@ -41,41 +41,49 @@ router.get('/allAccounts', verifyToken, (req, res) => {
 	});
 });
 
-router.delete('/deleteAccount/:_id', verifyToken, (req, res) => {
+/*router.delete('/deleteAccount/:_id', verifyToken, (req, res) => {
 	const mongoAccountId = new mongodb.ObjectID(req.params._id);
-	/**
-	 * Delete the incomes from that account
-	 */
-	Income.deleteMany({ account_id: mongoAccountId }, function(err, incomesDeleted) {
+
+	Account.deleteOne({ _id: mongoAccountId, user_id: req.user._id }, function(err, accountDeleted) {
 		if (err) {
 			console.log(err);
 			res.status(400).send({ message: err });
 		} else {
-			/** 
-			 * Delete the expenses from that account*
-			 */
-			Expense.deleteMany({ account_id: mongoAccountId }, function(err, expensesDeleted) {
-				if (err) {
-					console.log(err);
-					res.status(400).send({ message: err });
+			Income.deleteMany({ account_id: mongoAccountId }, function(error, incomesDeleted) {
+				if (error) {
+					console.log(error);
+					res.status(400).send({ message: error });
 				} else {
-					/**
-					 * Delete the account
-					 */
-					Account.deleteOne({ _id: mongoAccountId, user_id: req.user._id }, function(err, accountDeleted) {
-						if (err) {
-							console.log(err);
-							res.status(400).send({ message: err });
+					Expense.deleteMany({ account_id: mongoAccountId }, function(error2, expensesDeleted) {
+						if (error2) {
+							console.log(error2);
+							res.status(400).send({ message: error2 });
 						} else {
-							res.status(200).send({
-								_id: req.params._id,
-								user_id: req.user._id,
-								message: 'Account deleted'
-							});
 						}
 					});
 				}
 			});
+			res.status(200).send({
+				_id: req.params._id,
+				user_id: req.user._id,
+				message: 'Account deleted'
+			});
+		}
+	});
+});*/
+
+router.delete('/deleteAccount/:_id', verifyToken, (req, res) => {
+	const mongoAccountId = new mongodb.ObjectID(req.params._id);
+	Account.findById(req.params._id, function(err, account) {
+		if (err) {
+			console.log(err);
+			res.status(400).send({ message: err });
+		} else {
+			if (account.user_id == req.user_id) {
+				account.remove();
+			} else {
+				res.status(400).send({ message: 'Access denied' });
+			}
 		}
 	});
 });
