@@ -41,37 +41,6 @@ router.get('/allAccounts', verifyToken, (req, res) => {
 	});
 });
 
-/*router.delete('/deleteAccount/:_id', verifyToken, (req, res) => {
-	const mongoAccountId = new mongodb.ObjectID(req.params._id);
-
-	Account.deleteOne({ _id: mongoAccountId, user_id: req.user._id }, function(err, accountDeleted) {
-		if (err) {
-			console.log(err);
-			res.status(400).send({ message: err });
-		} else {
-			Income.deleteMany({ account_id: mongoAccountId }, function(error, incomesDeleted) {
-				if (error) {
-					console.log(error);
-					res.status(400).send({ message: error });
-				} else {
-					Expense.deleteMany({ account_id: mongoAccountId }, function(error2, expensesDeleted) {
-						if (error2) {
-							console.log(error2);
-							res.status(400).send({ message: error2 });
-						} else {
-						}
-					});
-				}
-			});
-			res.status(200).send({
-				_id: req.params._id,
-				user_id: req.user._id,
-				message: 'Account deleted'
-			});
-		}
-	});
-});*/
-
 router.delete('/deleteAccount/:_id', verifyToken, (req, res) => {
 	Account.findById(req.params._id, function(err, account) {
 		if (err) {
@@ -80,17 +49,20 @@ router.delete('/deleteAccount/:_id', verifyToken, (req, res) => {
 		} else {
 			if (account.user_id == req.user._id) {
 				account.remove();
+				console.log('Accountdeleted');
 				Income.deleteMany({ account_id: req.params._id }, function(error, incomeDeleted) {
 					if (error) {
 						console.log(error);
 						res.status(400).send({ message: error });
 					} else {
+						console.log('income deleted');
 						Expense.deleteMany({ account_id: req.params._id }, function(error2, expensesDeleted) {
 							if (error2) {
 								console.log(error2);
 								res.status(400).send({ message: error });
 							} else {
-								res.status(200).send({ message: 'Account Deleted' });
+								console.log('expense deleted');
+								res.status(200).send({ message: 'Account deleted' });
 							}
 						});
 					}
