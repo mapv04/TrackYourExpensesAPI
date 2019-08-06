@@ -49,20 +49,20 @@ router.delete('/deleteAccount/:_id', verifyToken, (req, res) => {
 		} else {
 			if (account.user_id == req.user._id) {
 				account.remove();
-				console.log('Accountdeleted');
 				Income.deleteMany({ account_id: req.params._id }, function(error, incomeDeleted) {
 					if (error) {
 						console.log(error);
 						res.status(400).send({ message: error });
 					} else {
-						console.log('income deleted');
 						Expense.deleteMany({ account_id: req.params._id }, function(error2, expensesDeleted) {
 							if (error2) {
 								console.log(error2);
 								res.status(400).send({ message: error });
 							} else {
-								console.log('expense deleted');
-								res.status(200).send({ message: 'Account deleted' });
+								res.status(200).send({
+									_id: account._id,
+									message: 'Account deleted'
+								});
 							}
 						});
 					}
