@@ -73,14 +73,28 @@ router.get('/allAccounts', verifyToken, (req, res) => {
 });*/
 
 router.delete('/deleteAccount/:_id', verifyToken, (req, res) => {
-	const mongoAccountId = new mongodb.ObjectID(req.params._id);
 	Account.findById(req.params._id, function(err, account) {
 		if (err) {
 			console.log(err);
 			res.status(400).send({ message: err });
 		} else {
-			if (account.user_id == req.user_id) {
+			if (account.user_id == req.user._id) {
 				account.remove();
+				Income.deleteMany({ account_id: req.params._id }, function(error, incomeDeleted) {
+					if (error) {
+						console.log(error);
+						res.status(400).send({ message: error });
+					} else {
+						Expense.deleteMany({ account_id: req.params._id }, function(error2, expensesDeleted) {
+							if (error2) {
+								console.log(error2);
+								res.status(400).send({ message: error });
+							} else {
+								res.status(200).send({ message: 'Account Deleted' });
+							}
+						});
+					}
+				});
 			} else {
 				res.status(400).send({ message: 'Access denied' });
 			}
