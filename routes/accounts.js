@@ -9,7 +9,6 @@ const express = require('express'),
 router.post('/newAccount', verifyToken, function(req, res) {
 	var name = req.body.name;
 	var color = req.body.color;
-	var imageLocation = req.body.imageLocation;
 	var lastUpdate = req.body.lastUpdate;
 	var user = req.user._id;
 	var newAccount = {
@@ -70,6 +69,21 @@ router.delete('/deleteAccount/:_id', verifyToken, (req, res) => {
 			} else {
 				res.status(400).send({ message: 'Access denied' });
 			}
+		}
+	});
+});
+
+router.put('/updateAccount/:id', verifyToken, (req, res) => {
+	Account.findById(req.params.id, function(err, account) {
+		if (err) {
+			console.log(err);
+			res.status(400).send();
+		} else if (account.user_id == req.user._id) {
+			account = req.body;
+			account.save();
+			res.status(200).send('Account updated');
+		} else {
+			res.status(400).send('Access denied');
 		}
 	});
 });
