@@ -14,7 +14,6 @@ router.post('/newAccount', verifyToken, function(req, res) {
 	var newAccount = {
 		name: name,
 		color: color,
-		imageLocation: imageLocation,
 		lastUpdate: lastUpdate,
 		user_id: user
 	};
