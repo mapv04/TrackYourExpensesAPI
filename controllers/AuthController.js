@@ -1,17 +1,8 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const UserModel = require('../models/user');
-const router = express.Router();
-const AuthController = require('../controllers/AuthController');
+const bcrypt = require('bcrypt'),
+	jwt = require('jsonwebtoken'),
+	UserModel = require('../models/user');
 
-router.post('/register', AuthController.signUp);
-
-router.post('/login', AuthController.logIn);
-
-/*
-router.post('/register', async (req, res) => {
-	//check if the user already exists
+module.exports.signUp = async (req, res) => {
 	const userExists = await UserModel.findOne({ username: req.body.username });
 	if (userExists) return res.status(409).send({ message: 'Username already exists' });
 
@@ -34,12 +25,9 @@ router.post('/register', async (req, res) => {
 	} catch (err) {
 		res.status(400).send(err);
 	}
-});
+};
 
-*/
-
-/*
-router.post('/login', async (req, res) => {
+module.exports.logIn = async (req, res) => {
 	const user = await UserModel.findOne({ username: req.body.username });
 	if (!user) return res.status(404).send(); // username does not exists
 	const validPass = await bcrypt.compare(req.body.password, user.passwordHash);
@@ -51,11 +39,4 @@ router.post('/login', async (req, res) => {
 		.status(200)
 		.header('auth-token', token)
 		.send({ token: token, name: user.name, lastname: user.lastname, username: user.username });
-});
-
-router.get('/logout', function(req, res) {
-	req.logout();
-	res.redirect('/login');
-});*/
-
-module.exports = router;
+};
