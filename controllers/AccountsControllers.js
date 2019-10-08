@@ -52,7 +52,7 @@ module.exports.deleteAccount = async (req, res) => {
 
 module.exports.updateAccount = async (req, res) => {
 	try {
-		const account = await AccountModel.findById(req.params.id);
+		var account = await AccountModel.findById(req.params.id);
 		account = req.body;
 		const accountUpdated = await account.save();
 		res.status(200).send('Account updated');
