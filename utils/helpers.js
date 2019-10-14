@@ -1,7 +1,7 @@
-export function nullToEmptyString(value) {
+module.exports.nullToEmptyString = function(value) {
 	return value === null ? '' : value;
-}
+};
 
-export function nullToZero(value) {
+module.exports.nullToZero = function(value) {
 	return value === null ? 0 : value;
-}
+};

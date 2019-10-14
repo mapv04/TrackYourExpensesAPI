@@ -38,7 +38,7 @@ module.exports.deleteAccount = async (req, res) => {
 		const promises = await Promise.all([
 			account.remove(),
 			IncomeModel.deleteMany({ account_id: req.params._id }),
-			Expense.deleteMany({ account_id: req.params._id })
+			ExpenseModel.deleteMany({ account_id: req.params._id })
 		]);
 		res.status(200).send({
 			_id: account._id,
