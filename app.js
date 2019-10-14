@@ -18,7 +18,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Database connection
-mongoose.connect(``, { useNewUrlParser: true });
+mongoose.connect(
+	`mongodb+srv://${config.dbUser}:${config.dbPassword}@${config.dbHost}/test?retryWrites=true&w=majority`,
+	{ useNewUrlParser: true }
+);
 
 /*************************************************** */
 // ROUTES
@@ -32,4 +35,4 @@ app.use('/api/user/accounts', accounts);
 app.use('/api/user/accounts/incomes', incomes);
 app.use('/api/user/accounts/expenses', expenses);
 
-app.listen(port, () => console.log('Service listening to port: ' + config.port));
+app.listen(config.port, () => console.log('Service listening to port: ' + config.port));
